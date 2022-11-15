@@ -5,7 +5,8 @@
   
  
 .DESCRIPTION
-    This will enable the remote registry service on local or remote computers.
+    This script contains 1 function, Pre_Scan function:
+    Prepares the windows enviroment for an authenticated scan by setting some registery values 
   
  
  
@@ -15,8 +16,7 @@
     Version: 1.0
     DateCreated: 15/11/2022
     DateUpdated: 15/11/2022
- 
- 
+
 #>
 
 function Pre_Scan {
@@ -38,7 +38,7 @@ function Pre_Scan {
   #Set-Service -Name RemoteRegistry  -StartupType Automatic -ErrorAction Stop
   #Start-Service -InputObject (Get-Service -Name RemoteRegistry) -ErrorAction Stop
 #STEP6: ALLOW ACCESS TO WMI THROUGH DEFENDER
-	if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
-	netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
+  if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
+  netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
 }
 Pre_Scan
