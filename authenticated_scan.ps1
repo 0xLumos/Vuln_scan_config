@@ -1,6 +1,6 @@
+
 <#
-.Synopsis
-    This will enable the remote registry service on local or remote computers.
+
   
   
  
@@ -13,11 +13,13 @@
 .NOTES   
     Name: Enable-RemoteRegistry
     Author: Provention Ltd
-    Version: 1.0
+    Version: 1.1
     DateCreated: 15/11/2022
     DateUpdated: 15/11/2022
 
 #>
+
+
 
 function Pre_Scan {
 #Display all keys and values in this registery 
