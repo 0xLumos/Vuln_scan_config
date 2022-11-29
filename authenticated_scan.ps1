@@ -98,7 +98,7 @@ function disable{
 
   Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountToken
 
-  echo "-------------------------------------------------------------------------"
+ 
 
   Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name forceguest
 
