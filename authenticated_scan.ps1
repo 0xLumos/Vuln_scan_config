@@ -4,18 +4,20 @@
   
  
 .DESCRIPTION
-    This script contains 1 function, Pre_Scan function:
-    Prepares the windows enviroment for an authenticated scan by setting some registery values 
-    Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
-  
- 
+    This script contains 2 function:
+     enable function ->
+      Prepares the windows enviroment for an authenticated scan by setting some registery values 
+   
+    disable function ->
+      switch the windows enviroment to rest mode after an authenticated scan by clearing some registery values 
  
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 1.3
+    Version: 1.7
     DateCreated: 15/11/2022
-    DateUpdated: 15/11/2022
+    DateUpdated: 29/11/2022
+     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
 
 #>
 function enable{
@@ -113,8 +115,15 @@ function disable{
 }
 
 
+$param1=$args[0]
 
 
+if ($param1 -eq 'enable'){
+    enable
+}
+elseif($param1 -ne 'disable') {
+   disable
+}
 
 
 
