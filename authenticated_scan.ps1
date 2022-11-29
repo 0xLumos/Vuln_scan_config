@@ -6,13 +6,14 @@
 .DESCRIPTION
     This script contains 1 function, Pre_Scan function:
     Prepares the windows enviroment for an authenticated scan by setting some registery values 
+    Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
   
  
  
 .NOTES   
-    Name: Enable-RemoteRegistry
-    Author: Provention Ltd
-    Version: 1.2
+    Name: Authenticated scan
+    Author: Nour Alhouseini | Provention Ltd
+    Version: 1.3
     DateCreated: 15/11/2022
     DateUpdated: 15/11/2022
 
@@ -24,6 +25,12 @@ Set-Service -Name RemoteRegistry  -StartupType Automatic -ErrorAction Stop
 
 Start-Service -InputObject (Get-Service -Name RemoteRegistry) -ErrorAction Stop
 
+echo "-------------------------------------------------------------------------"
+
+echo "Setting WMI to automatic, start service"
+
+$s = Get-Service wmi
+Start-Service -InputObject $s -PassThru | Format-List >> services.txt
 
 echo "-------------------------------------------------------------------------"
 
@@ -50,7 +57,7 @@ echo "-------------------------------------------------------------------------"
 
 if( Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name "forceguest" -Value "0"  -PropertyType "DWORD")
    echo "Creating HK "
-   Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountToken" -Value "1" 
+   Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountToken" -Value "0" 
 
    Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountToken -name "LocalAccountToken" -> to access a specific key
 }
@@ -65,20 +72,7 @@ else
 
 echo "-------------------------------------------------------------------------"
 
-if( Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name "forceguest" -Value "0"  -PropertyType "DWORD")
-   echo "Creating HK "
-   Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountToken" -Value "1" 
 
-   Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountToken -name "LocalAccountToken" -> to access a specific key
-}
-
-else
-{
-   echo "Setting forceguest"
-   New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\Lsa -Name "forceguest" -Value "0"  -PropertyType "DWORD"
-   echo "Item has been set"
-   Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountToken # -name "LocalAccountToken" -> to access a specific key
-}
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
   netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
 
