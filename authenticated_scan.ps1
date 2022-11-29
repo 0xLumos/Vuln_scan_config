@@ -77,7 +77,46 @@ function enable{
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
 }
 
-enable
+
+
+
+function disable{
+  echo "Stopping remote registry service"
+
+ 
+
+  Stop-Service -InputObject (Get-Service -Name RemoteRegistry) -ErrorAction Stop
+
+  echo "-------------------------------------------------------------------------"
+
+  echo "Stopping WMI service"
+
+  $s = Get-Service wmi
+  Stop-Service -InputObject $s -PassThru
+
+  echo "-------------------------------------------------------------------------"
+
+  Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountToken
+
+  echo "-------------------------------------------------------------------------"
+
+  Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name forceguest
+
+ 
+
+ 
+  echo "-------------------------------------------------------------------------"
+
+
+  if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
+    netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=no # Run as administrator
+}
+
+
+
+
+
+
 
 
 
