@@ -13,7 +13,7 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.0
+    Version: 2.1
     DateCreated: 15/11/2022
     DateUpdated: 01/12/2022
      Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
@@ -28,6 +28,28 @@ function enable{
   echo "-------------------------------------------------------------------------"
 
 
+
+
+  #https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.NetworkConnections::NC_PersonalFirewallConfig
+  if(Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -name NC_PersonalFirewallConfig)
+  {
+     echo "Setting NC_PersonalFirewallConfig to 1 (Disable) "
+     Set-ItemProperty -Path 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -Name "NC_PersonalFirewallConfig" -Value "1" 
+
+     Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' | findstr NC_PersonalFirewallConfig # -name "NC_PersonalFirewallConfig" -> to access a specific key
+  }
+
+  else
+  {
+     echo "Creating NC_PersonalFirewallConfig"
+     New-ItemProperty -Path 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -Name "NC_PersonalFirewallConfig" -Value "1"  -PropertyType "DWORD"
+     echo "NC_PersonalFirewallConfig has been set"
+     Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' | findstr NC_PersonalFirewallConfig # -name "NC_PersonalFirewallConfig" -> to access a specific key
+  }
+
+  
+  
+
   echo "Setting WMI to automatic, start service"
 
   #https://learn.microsoft.com/en-us/windows/win32/wmisdk/starting-and-stopping-the-wmi-service
@@ -35,6 +57,9 @@ function enable{
   echo "-------------------------------------------------------------------------"
 
 
+
+
+# SPN TARGET VALIDATION
 #\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
 # https://www.stigviewer.com/stig/windows_7/2017-02-21/finding/V-21950
  if(Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -name SmbServerNameHardeningLevel)
