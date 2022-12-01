@@ -16,7 +16,7 @@
     Version: 2.1
     DateCreated: 15/11/2022
     DateUpdated: 01/12/2022
-     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
+    Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
 #>
 function enable{
   echo "Setting remote registery to automatic, start service"
@@ -29,7 +29,7 @@ function enable{
 
 
 
-
+  #Prohibit use of Internet Connection Firewall on your DNS domain network
   #https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.NetworkConnections::NC_PersonalFirewallConfig
   if(Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -name NC_PersonalFirewallConfig)
   {
@@ -46,9 +46,9 @@ function enable{
      echo "NC_PersonalFirewallConfig has been set"
      Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' | findstr NC_PersonalFirewallConfig # -name "NC_PersonalFirewallConfig" -> to access a specific key
   }
-
-  
-  
+  https://www.c-sharpcorner.com/article/how-to-enable-or-disable-file-and-printer-sharing-in-windows-102/
+  #To turn on the file and printer sharing, type the following command in the command prompt
+  netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=Yes
 
   echo "Setting WMI to automatic, start service"
 
@@ -156,7 +156,8 @@ function disable{
   echo "forceguest deleted.."
 
 
- 
+   #To turn on the file and printer sharing, type the following command in the command prompt
+  netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=No
   
 
 
