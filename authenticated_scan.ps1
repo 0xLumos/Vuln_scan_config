@@ -13,7 +13,7 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.1
+    Version: 2.2
     DateCreated: 15/11/2022
     DateUpdated: 01/12/2022
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
@@ -46,7 +46,7 @@ function enable{
      echo "NC_PersonalFirewallConfig has been set"
      Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' | findstr NC_PersonalFirewallConfig # -name "NC_PersonalFirewallConfig" -> to access a specific key
   }
-  https://www.c-sharpcorner.com/article/how-to-enable-or-disable-file-and-printer-sharing-in-windows-102/
+  #https://www.c-sharpcorner.com/article/how-to-enable-or-disable-file-and-printer-sharing-in-windows-102/
   #To turn on the file and printer sharing, type the following command in the command prompt
   netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=Yes
 
