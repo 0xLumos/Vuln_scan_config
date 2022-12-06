@@ -80,20 +80,20 @@ function enable{
 
 
 
-  if(Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountToken)
+  if(Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountTokenFilterPolicy)
   {
      echo "Setting LocalAccountToken to 1 "
-     Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountToken" -Value "1" 
+     Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountTokenFilterPolicy" -Value "1" 
 
-     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountToken # -name "LocalAccountToken" -> to access a specific key
+     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountTokenFilterPolicy # -name "LocalAccountTokenFilterPolicy" -> to access a specific key
   }
 
   else
   {
-     echo "Creating LocalAccountToken"
-     New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountToken" -Value "1"  -PropertyType "DWORD"
-     echo "LocalAccountToken has been set"
-     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountToken # -name "LocalAccountToken" -> to access a specific key
+     echo "Creating LocalAccountTokenFilterPolicy"
+     New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountTokenFilterPolicy" -Value "1"  -PropertyType "DWORD"
+     echo "LocalAccountTokenFilterPolicy has been set"
+     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountTokenFilterPolicy # -name "LocalAccountToken" -> to access a specific key
   }
 
 
