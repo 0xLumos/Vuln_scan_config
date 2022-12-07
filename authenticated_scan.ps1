@@ -13,9 +13,9 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.2
+    Version: 2.3
     DateCreated: 15/11/2022
-    DateUpdated: 01/12/2022
+    DateUpdated: 07/12/2022
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
 #>
 function enable{
@@ -62,21 +62,21 @@ function enable{
 # SPN TARGET VALIDATION
 #\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
 # https://www.stigviewer.com/stig/windows_7/2017-02-21/finding/V-21950
- if(Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -name SmbServerNameHardeningLevel)
-  {
-     echo "Setting SmbServerNameHardeningLevel to 1 "
-     Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "SmbServerNameHardeningLevel" -Value "1" 
+#  if(Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -name SmbServerNameHardeningLevel)
+#   {
+#      echo "Setting SmbServerNameHardeningLevel to 1 "
+#      Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "SmbServerNameHardeningLevel" -Value "1" 
 
-     Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ | findstr SmbServerNameHardeningLevel # -name "LocalAccountToken" -> to access a specific key
-  }
+#      Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ | findstr SmbServerNameHardeningLevel # -name "LocalAccountToken" -> to access a specific key
+#   }
 
-  else
-  {
-     echo "Creating SmbServerNameHardeningLevel"
-     New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "SmbServerNameHardeningLevel" -Value "1"  -PropertyType "DWORD"
-     echo "SmbServerNameHardeningLevel has been set"
-     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr SmbServerNameHardeningLevel # -name "LocalAccountToken" -> to access a specific key
-  }
+#   else
+#   {
+#      echo "Creating SmbServerNameHardeningLevel"
+#      New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "SmbServerNameHardeningLevel" -Value "1"  -PropertyType "DWORD"
+#      echo "SmbServerNameHardeningLevel has been set"
+#      Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr SmbServerNameHardeningLevel # -name "LocalAccountToken" -> to access a specific key
+#   }
 
 
 
@@ -143,8 +143,7 @@ function disable{
 
 
 
-  #$s = Get-Service wmi
-  #Stop-Service -InputObject $s -PassThru
+  net stop winmgmt
 
   echo "-------------------------------------------------------------------------"
 
@@ -162,7 +161,8 @@ function disable{
 
 
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
-    netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=no # Run as administrator
+    netsh advfirewall firewall set rule group="windows management instrumentation (
+    )" new enable=no # Run as administrator
     #rules enable = no
   echo "Exiting..."
 }
