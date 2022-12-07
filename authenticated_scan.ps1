@@ -13,7 +13,7 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.3
+    Version: 2.4
     DateCreated: 15/11/2022
     DateUpdated: 07/12/2022
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
@@ -59,24 +59,24 @@ function enable{
 
 
 
-# SPN TARGET VALIDATION
-#\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
-# https://www.stigviewer.com/stig/windows_7/2017-02-21/finding/V-21950
-#  if(Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -name SmbServerNameHardeningLevel)
-#   {
-#      echo "Setting SmbServerNameHardeningLevel to 1 "
-#      Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "SmbServerNameHardeningLevel" -Value "1" 
+  #SPN TARGET VALIDATION
+  #\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
+  #https://www.vjonathan.com/post/windows-10-1709-and-smbservernamehardeninglevel/
+   if(Get-ItemProperty  HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\ -name RequiredPrivileges)
+    {
+       echo "Setting SmbServerNameHardeningLevel to 1 "
+       Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "RequiredPrivileges" -Value "SeTcbPrivilege" 
 
-#      Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ | findstr SmbServerNameHardeningLevel # -name "LocalAccountToken" -> to access a specific key
-#   }
+       Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ | findstr RequiredPrivileges # -name "RequiredPrivileges" -> to access a specific key
+    }
 
-#   else
-#   {
-#      echo "Creating SmbServerNameHardeningLevel"
-#      New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "SmbServerNameHardeningLevel" -Value "1"  -PropertyType "DWORD"
-#      echo "SmbServerNameHardeningLevel has been set"
-#      Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr SmbServerNameHardeningLevel # -name "LocalAccountToken" -> to access a specific key
-#   }
+    else
+    {
+       echo "Creating RequiredPrivileges"
+       New-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "RequiredPrivileges" -Value "SeTcbPrivilege"  -PropertyType "String"
+       echo "RequiredPrivileges has been set"
+       Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ | findstr RequiredPrivileges # -name "RequiredPrivileges" -> to access a specific key
+    }
 
 
 
