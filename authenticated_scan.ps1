@@ -64,7 +64,8 @@ function enable{
   #https://www.vjonathan.com/post/windows-10-1709-and-smbservernamehardeninglevel/
    if(Get-ItemProperty  HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\ -name RequiredPrivileges)
     {
-       echo "Setting SmbServerNameHardeningLevel to 1 "
+       echo "Setting RequiredPrivileges to SeTcbPrivilege "
+       echo "Documentation: https://www.vjonathan.com/post/windows-10-1709-and-smbservernamehardeninglevel/ "
        Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "RequiredPrivileges" -Value "SeTcbPrivilege" 
 
        Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ | findstr RequiredPrivileges # -name "RequiredPrivileges" -> to access a specific key
