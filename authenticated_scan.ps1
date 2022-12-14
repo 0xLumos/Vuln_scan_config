@@ -123,18 +123,18 @@ function enable{
   
   
     #https://learn.microsoft.com/en-us/windows/win32/wmisdk/connecting-to-wmi-remotely-starting-with-vista#dcom-settings
-  if( Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" )
-  {
-     echo "Creating AllowAnonymousCallback "
-     Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "1"
+#   if( Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" )
+#   {
+#      echo "Creating AllowAnonymousCallback "
+#      Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "1"
 
-  else
-  {
-     echo "Setting AllowAnonymousCallback"
-     New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "1"  -PropertyType "DWORD"
-     echo "AllowAnonymousCallback has been set"
-     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ | findstr AllowAnonymousCallback # -name "AllowAnonymousCallback" -> to access a specific key
-  }
+#   else
+#   {
+#      echo "Setting AllowAnonymousCallback"
+#      New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "1"  -PropertyType "DWORD"
+#      echo "AllowAnonymousCallback has been set"
+#      Get-ItemProperty HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ | findstr AllowAnonymousCallback # -name "AllowAnonymousCallback" -> to access a specific key
+#   }
 
 
   
@@ -147,6 +147,7 @@ function enable{
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=yes # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=yes # Run as administrator
+    netsh advfirewall firewall add rule dir=in name="DCOM" program=%systemroot%\system32\svchost.exe service=rpcss action=allow protocol=TCP localport=135
     
     
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
@@ -188,18 +189,18 @@ function disable{
   netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=No
   
 
-  if( Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" )
-  {
-     echo "Creating AllowAnonymousCallback "
-     Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "0"
+#   if( Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" )
+#   {
+#      echo "Creating AllowAnonymousCallback "
+#      Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "0"
 
-  else
-  {
-     echo "Setting AllowAnonymousCallback"
-     New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "0"  -PropertyType "DWORD"
-     echo "AllowAnonymousCallback has been set"
-     Get-ItemProperty HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ | findstr AllowAnonymousCallback # -name "AllowAnonymousCallback" -> to access a specific key
-  }
+#   else
+#   {
+#      echo "Setting AllowAnonymousCallback"
+#      New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ -Name "AllowAnonymousCallback" -Value "0"  -PropertyType "DWORD"
+#      echo "AllowAnonymousCallback has been set"
+#      Get-ItemProperty HKLM:\SOFTWARE\Microsoft\WBEM\CIMOM\ | findstr AllowAnonymousCallback # -name "AllowAnonymousCallback" -> to access a specific key
+#   }
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=no # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=no # Run as administrator
