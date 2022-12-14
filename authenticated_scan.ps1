@@ -13,9 +13,9 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.4
+    Version: 2.5
     DateCreated: 15/11/2022
-    DateUpdated: 07/12/2022
+    DateUpdated: 14/12/2022
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
 #>
 function enable{
@@ -83,7 +83,7 @@ function enable{
 
   if(Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountTokenFilterPolicy)
   {
-     echo "Setting LocalAccountToken to 1 "
+     echo "Setting LocalAccountTokenFilterPolicy to 1 "
      Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -Name "LocalAccountTokenFilterPolicy" -Value "1" 
 
      Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ | findstr LocalAccountTokenFilterPolicy # -name "LocalAccountTokenFilterPolicy" -> to access a specific key
@@ -149,15 +149,15 @@ function disable{
 
   echo "-------------------------------------------------------------------------"
 
-  Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountToken
-  echo "LocalAccountToken deleted.."
+  Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountTokenFilterPolicy
+  echo "LocalAccountTokenFilterPolicy cleared.."
  
 
   Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name forceguest
-  echo "forceguest deleted.."
+  echo "forceguest cleared.."
 
 
-   #To turn on the file and printer sharing, type the following command in the command prompt
+   #To turn off the file and printer sharing, type the following command in the command prompt
   netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=No
   
 
