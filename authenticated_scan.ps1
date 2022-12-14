@@ -143,12 +143,15 @@ function enable{
   
   echo "-------------------------------------------------------------------------"
 
+
+#https://telaeris.com/kb/wmi-access-denied-asynchronous-calls/
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=yes # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=yes # Run as administrator
     netsh advfirewall firewall add rule dir=in name="DCOM" program=%systemroot%\system32\svchost.exe service=rpcss action=allow protocol=TCP localport=135
-    
+    netsh advfirewall firewall add rule dir=in name =”WMI” program=%systemroot%\system32\svchost.exe service=winmgmt action = allow protocol=TCP localport=any
+    netsh advfirewall firewall add rule dir=in name =”UnsecApp” program=%systemroot%\system32\wbem\unsecapp.exe action=allow
     
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
     #rules enable = yes
@@ -205,6 +208,15 @@ function disable{
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=no # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=no # Run as administrator
     netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=no # Run as administrator
+    #To disable the DCOM exception.
+    netsh advfirewall firewall delete rule name=”DCOM”
+    #To disable the WMI service exception.
+    netsh advfirewall firewall delete rule name=”WMI”
+    #To disable the sink exception.
+    netsh advfirewall firewall delete rule name=”UnsecApp”
+    #To disable the outgoing exception.
+    netsh advfirewall firewall delete rule name=”WMI_OUT”
+    
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
     #rules enable = no
  
