@@ -50,11 +50,11 @@ function enable{
   #To turn on the file and printer sharing, type the following command in the command prompt
   netsh advfirewall firewall set rule group="File and Printer Sharing" new enable=Yes
 
-  echo "Setting WMI to automatic, start service"
+#   echo "Setting WMI to automatic, start service"
 
-  #https://learn.microsoft.com/en-us/windows/win32/wmisdk/starting-and-stopping-the-wmi-service
-  net start winmgmt
-  echo "-------------------------------------------------------------------------"
+#   #https://learn.microsoft.com/en-us/windows/win32/wmisdk/starting-and-stopping-the-wmi-service
+#   net start winmgmt
+#   echo "-------------------------------------------------------------------------"
 
 
 
@@ -141,13 +141,13 @@ function disable{
   echo "-------------------------------------------------------------------------"
 
   
-  echo "Stopping WMI service"
+#   echo "Stopping WMI service"
 
 
 
-  net stop winmgmt
+#   net stop winmgmt
 
-  echo "-------------------------------------------------------------------------"
+#   echo "-------------------------------------------------------------------------"
 
   Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountTokenFilterPolicy
   echo "LocalAccountTokenFilterPolicy cleared.."
