@@ -123,6 +123,7 @@ function enable{
 
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
+    Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
     #rules enable = yes
   echo "Exiting..."
 }
@@ -164,6 +165,7 @@ function disable{
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
     netsh advfirewall firewall set rule group="windows management instrumentation (
     )" new enable=no # Run as administrator
+    Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
     #rules enable = no
   echo "Exiting..."
 }
