@@ -13,7 +13,7 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.6
+    Version: 2.8
     DateCreated: 15/11/2022
     DateUpdated: 14/12/2022
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
@@ -147,8 +147,11 @@ function enable{
 #https://telaeris.com/kb/wmi-access-denied-asynchronous-calls/
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes # Run as administrator
-    netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=yes # Run as administrator
-    netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=yes # Run as administrator
+    #netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=yes # Run as administrator
+    netsh advfirewall firewall set rule name="File and Printer Sharing (NB-Session-In)" dir=in profile=public,private new enable=Yes
+
+    #netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=yes # Run as administrator
+    netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir=in profile=public,private new enable=Yes
     netsh advfirewall firewall add rule dir=in name="DCOM" program=%systemroot%\system32\svchost.exe service=rpcss action=allow protocol=TCP localport=135
     netsh advfirewall firewall add rule dir=in name =”WMI” program=%systemroot%\system32\svchost.exe service=winmgmt action = allow protocol=TCP localport=any
     netsh advfirewall firewall add rule dir=in name =”UnsecApp” program=%systemroot%\system32\wbem\unsecapp.exe action=allow
@@ -206,8 +209,11 @@ function disable{
 #   }
   if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$name`"" -Verb RunAs; exit } 
     netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=no # Run as administrator
-    netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=no # Run as administrator
-    netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=no # Run as administrator
+    #netsh advfirewall firewall set rule group="File and Printer Sharing (NB-Session-In)" new enable=no # Run as administrator
+    netsh advfirewall firewall set rule name="File and Printer Sharing (NB-Session-In)" dir=in profile=public,private new enable=No
+    netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir=in profile=public,private
+
+    #netsh advfirewall firewall set rule group="File and Printer Sharing (SMB-In)" new enable=no # Run as administrator
     #To disable the DCOM exception.
     netsh advfirewall firewall delete rule name=”DCOM”
     #To disable the WMI service exception.
