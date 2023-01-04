@@ -15,7 +15,7 @@
     Author: Nour Alhouseini | Provention Ltd
     Version: 3.1
     DateCreated: 15/11/2022
-    DateUpdated: 14/12/2022
+    DateUpdated: 04/01/2023
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
 #>
 function enable{
