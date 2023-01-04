@@ -13,7 +13,7 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 2.8
+    Version: 2.9
     DateCreated: 15/11/2022
     DateUpdated: 14/12/2022
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
@@ -154,7 +154,6 @@ function enable{
     netsh advfirewall firewall set rule name="File and Printer Sharing (SMB-In)" dir=in profile=public,private new enable=Yes
     netsh advfirewall firewall add rule dir=in name="DCOM" program=%systemroot%\system32\svchost.exe service=rpcss action=allow protocol=TCP localport=135
     netsh advfirewall firewall add rule dir=in name =”WMI” program=%systemroot%\system32\svchost.exe service=winmgmt action = allow protocol=TCP localport=any
-    netsh advfirewall firewall add rule dir=in name =”UnsecApp” program=%systemroot%\system32\wbem\unsecapp.exe action=allow
     
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
     #rules enable = yes
