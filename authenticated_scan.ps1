@@ -143,6 +143,7 @@ function enable{
     netsh advfirewall firewall set rule name="Windows Management Instrumentation (ASync-In)" dir=in profile=public,private new enable=Yes
     netsh advfirewall firewall set rule name="Windows Management Instrumentation (DCOM-In)" dir=in profile=public,private new enable=Yes
     netsh advfirewall firewall set rule name="Windows Management Instrumentation (WMI-In)" dir=in profile=public,private new enable=Yes
+    netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=yes 
     echo "Setting WIFI to private"
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
     #rules enable = yes
@@ -187,6 +188,7 @@ function disable{
     netsh advfirewall firewall set rule name="Windows Management Instrumentation (ASync-In)" dir=in profile=public,private new enable=No
     netsh advfirewall firewall set rule name="Windows Management Instrumentation (DCOM-In)" dir=in profile=public,private new enable=No
     netsh advfirewall firewall set rule name="Windows Management Instrumentation (WMI-In)" dir=in profile=public,private new enable=No
+    netsh advfirewall firewall set rule group="windows management instrumentation (wmi)" new enable=No
     
     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
     #rules enable = no
