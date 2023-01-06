@@ -13,9 +13,9 @@
 .NOTES   
     Name: Authenticated scan
     Author: Nour Alhouseini | Provention Ltd
-    Version: 3.1
+    Version: 3.2
     DateCreated: 15/11/2022
-    DateUpdated: 04/01/2023
+    DateUpdated: 06/01/2023
     Github raw script : https://raw.githubusercontent.com/alhousen/Provention-/main/authenticated_scan.ps1
 #>
 function enable{
@@ -26,6 +26,29 @@ function enable{
   Start-Service -InputObject (Get-Service -Name RemoteRegistry) -ErrorAction Stop
 
   echo "-------------------------------------------------------------------------"
+
+
+
+
+  #Prohibit use of Internet Connection Sharing on your DNS domain network
+  #https://admx.help/?Category=Windows_10_2016&Policy=Microsoft.Policies.NetworkConnections::NC_ShowSharedAccessUI
+#   if(Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -name NC_PersonalFirewallConfig)
+#   {
+#      echo "Setting NC_ShowSharedAccessUI to 1 (Disable) "
+#      Set-ItemProperty -Path 'HKLM:SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Services\FileAndPrint' -Name "NC_ShowSharedAccessUI" -Value "1" 
+
+#      Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' | findstr NC_ShowSharedAccessUI # -name "NC_PersonalFirewallConfig" -> to access a specific key
+#   }
+
+#   else
+#   {
+#      echo "Creating NC_ShowSharedAccessUI"
+#      New-ItemProperty -Path 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -Name "NC_ShowSharedAccessUI" -Value "1"  -PropertyType "DWORD"
+#      echo "NC_ShowSharedAccessUI has been set"
+#      Get-ItemProperty 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' | findstr NC_ShowSharedAccessUI # -name "NC_ShowSharedAccessUI" -> to access a specific key
+#   }
+
+
 
 
 
@@ -51,7 +74,7 @@ function enable{
   #SPN TARGET VALIDATION
   #\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\
   #https://www.vjonathan.com/post/windows-10-1709-and-smbservernamehardeninglevel/
-   if(Get-ItemProperty  HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\ -name RequiredPrivileges)
+   if(Get-ItemProperty  HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -name RequiredPrivileges)
     {
        echo "Setting RequiredPrivileges to SeTcbPrivilege "
        echo "Documentation: https://www.vjonathan.com/post/windows-10-1709-and-smbservernamehardeninglevel/ "
@@ -139,20 +162,19 @@ function disable{
 
   echo "-------------------------------------------------------------------------"
 
-  
-#   echo "Stopping WMI service"
+  echo "Setting NC_PersonalFirewallConfig to 0 (Enable) "
 
+  Set-ItemProperty -Path 'HKLM:Software\Policies\Microsoft\Windows\Network Connections' -Name "NC_PersonalFirewallConfig" -Value "0" 
 
-
-#   net stop winmgmt
-
-#   echo "-------------------------------------------------------------------------"
-
-  Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountTokenFilterPolicy
+  Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name LocalAccountTokenFilterPolicy -Value "0"
   echo "LocalAccountTokenFilterPolicy cleared.."
  
+ 
+  Clear-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\ -Name "RequiredPrivileges" 
 
-  Clear-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name forceguest
+ 
+
+  Set-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system\ -name forceguest -Value "1"
   echo "forceguest cleared.."
 
 
