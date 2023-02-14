@@ -23,13 +23,14 @@ def scan(ips_file):
     
     with open(ips_file) as ip:
         ips = ip.readlines()
+        print(ips)
     ip_count=0
     for i in ips:
         print(ip_count)
         print("Scanning : "+ i)
         if i.isspace():
             continue
-        out = os.system('nmap -sn -n  -iL {1} >> file{0}.txt'.format(ip_count,ips_file))
+        out = os.system('nmap -sn -n  -iL {1} -oA file{0}.txt'.format(ip_count,ips_file))
         ip_count = ip_count + 1
         
         
