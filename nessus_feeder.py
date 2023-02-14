@@ -30,7 +30,7 @@ def scan(ips_file):
         print("Scanning : "+ i)
         if i.isspace():
             continue
-        out = os.system('nmap -sn -n  -iL {1} -oA file{0}.txt'.format(ip_count,ips_file))
+        out = os.system('nmap -sn -n  -oA file{0} {1} '.format(ip_count,i))
         ip_count = ip_count + 1
         
         
