@@ -29,11 +29,11 @@ def scan(ips_file):
         print("Scanning : "+ i)
         if i.isspace():
             continue
-        else:
-            out = os.system('nmap -sn -n  -iL {1} >> file{0}.txt'.format(ip_count,ips_file))
-            ip_count = ip_count + 1
+        out = os.system('nmap -sn -n  -iL {1} >> file{0}.txt'.format(ip_count,ips_file))
+        ip_count = ip_count + 1
         
-   
+        
+        
         #print(ips[i])
 if __name__ == "__main__":
 
